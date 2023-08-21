@@ -8,17 +8,20 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QStatusBar,
     QToolBar,
+    QFileDialog,
 )
 
 
 class MainWindow(QMainWindow):
+    filename='new.txt'
+    Saved=True #if saved = false then show warning before open another or new file
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("My App")
+        self.setWindowTitle(self.filename)
 
-        Editor=QTextEdit()
-        self.setCentralWidget(Editor)
+        self.Editor=QTextEdit()
+        self.setCentralWidget(self.Editor)
 
         toolbar=QToolBar('Main Toolbar')
         self.addToolBar(toolbar)
@@ -41,7 +44,16 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar(self))
 
     def savefile(self):
-        print('File Saved')
+        fname,fltr=QFileDialog.getSaveFileName(
+            self,
+            caption='Save File',
+            dir=self.filename
+        )
+        self.filename=fname.split('/')[-1]
+        self.setWindowTitle(self.filename)
+        with open(fname,'w') as f:
+            f.write(self.Editor.toPlainText())
+        print(fname,' Saved!')
     
     def openfile(self):
         print('File Opened')
