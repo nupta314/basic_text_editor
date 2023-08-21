@@ -4,22 +4,26 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QPushButton,
-    QTextEdit
-)  # <1>
+    QTextEdit,
+    QStatusBar,
+    QToolBar,
+)
 
 
-# Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
     def __init__(self):
-        super().__init__()  # <2>
+        super().__init__()
 
         self.setWindowTitle("My App")
 
-        Editor=QTextEdit('Type Here...')
+        Editor=QTextEdit()
+        self.setCentralWidget(Editor)
 
-        # Set the central widget of the Window.
-        self.setCentralWidget(Editor)  # <3>
+        toolbar=QToolBar('Main Toolbar')
+        self.addToolBar(toolbar)
+
+        
+
 
 
 app = QApplication(sys.argv)
