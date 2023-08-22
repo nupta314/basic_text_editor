@@ -2,4 +2,4 @@
 
 A Basic Text Editor using pyside6
 
-Implementing New, Open, Save for now
+Implementing New, Open, Save, Save as for now
