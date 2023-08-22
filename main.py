@@ -56,14 +56,37 @@ class MainWindow(QMainWindow):
             self.savedstatus.setText('File Saved : '+str(self.Saved))
     
     def openfile(self):
-        print('File Opened')
+        self.checksaved()
+        fname,fltr=QFileDialog.getOpenFileName(
+            self,
+            caption='Open File',
+        )
+        if fname:
+            self.filename=fname.split('/')[-1]
+            print(fname,' Opended!')
+            with open(fname,'r') as f:
+                self.Editor.setText(f.read())
+            self.setWindowTitle(self.filename)
+            self.Saved=True
+            self.savedstatus.setText('File Saved : '+str(self.Saved))
 
     def newfile(self):
-        print('New File')
+        self.checksaved()
+        self.filename='new.txt'
+        self.Editor.setText('')
+        print('New File Created')
+        self.setWindowTitle(self.filename)
+        self.Saved=False
+        self.savedstatus.setText('File Saved : '+str(self.Saved))
 
     def contentchanged(self):
         self.Saved=False
         self.savedstatus.setText('File Saved : '+str(self.Saved))
+
+    def checksaved(self):
+        if self.Saved:
+            return
+        #write code to warn of unsaved file        
 
 app = QApplication(sys.argv)
 
