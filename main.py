@@ -2,25 +2,19 @@ import sys
 
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QTextEdit,
-    QStatusBar,
-    QToolBar,
-    QFileDialog,
-)
+from PySide6.QtWidgets import *
 
 
 class MainWindow(QMainWindow):
     filename='new.txt'
-    Saved=True #if saved = false then show warning before open another or new file
+    Saved=False #if saved = false then show warning before open another or new file
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle(self.filename)
 
         self.Editor=QTextEdit()
+        self.Editor.textChanged.connect(self.contentchanged)
         self.setCentralWidget(self.Editor)
 
         toolbar=QToolBar('Main Toolbar')
@@ -41,7 +35,10 @@ class MainWindow(QMainWindow):
         save_action.triggered.connect(self.savefile)
         toolbar.addAction(save_action)
 
-        self.setStatusBar(QStatusBar(self))
+        self.status=QStatusBar(self)
+        self.savedstatus=QLabel('File Saved : '+str(self.Saved),self.status)
+        self.status.addWidget(self.savedstatus)
+        self.setStatusBar(self.status)
 
     def savefile(self):
         fname,fltr=QFileDialog.getSaveFileName(
@@ -49,11 +46,14 @@ class MainWindow(QMainWindow):
             caption='Save File',
             dir=self.filename
         )
-        self.filename=fname.split('/')[-1]
-        self.setWindowTitle(self.filename)
-        with open(fname,'w') as f:
-            f.write(self.Editor.toPlainText())
-        print(fname,' Saved!')
+        if fname:
+            self.filename=fname.split('/')[-1]
+            print(fname,' Saved!')
+            '''with open(fname,'w') as f:
+                f.write(self.Editor.toPlainText())'''
+            self.setWindowTitle(self.filename)
+            self.Saved=True
+            self.savedstatus.setText('File Saved : '+str(self.Saved))
     
     def openfile(self):
         print('File Opened')
@@ -61,7 +61,9 @@ class MainWindow(QMainWindow):
     def newfile(self):
         print('New File')
 
-
+    def contentchanged(self):
+        self.Saved=False
+        self.savedstatus.setText('File Saved : '+str(self.Saved))
 
 app = QApplication(sys.argv)
 
