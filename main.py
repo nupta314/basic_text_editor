@@ -1,7 +1,7 @@
 import sys
 import os
 
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction,QIcon
 from PySide6.QtWidgets import *
 
 class MainWindow(QMainWindow):
